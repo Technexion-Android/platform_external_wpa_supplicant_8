@@ -2274,9 +2274,13 @@ static int wpa_driver_nl80211_del_beacon(struct wpa_driver_nl80211_data *drv)
 static void wpa_driver_nl80211_deinit(struct i802_bss *bss)
 {
 	struct wpa_driver_nl80211_data *drv = bss->drv;
+	int ret;
 
 	wpa_printf(MSG_INFO, "nl80211: deinit ifname=%s disabled_11b_rates=%d",
 		   bss->ifname, drv->disabled_11b_rates);
+
+	ret=system("/system/bin/sh /system/bin/eth_flag 1");
+		wpa_printf(MSG_DEBUG, "eth0 updown ret=%d",ret);
 
 	bss->in_deinit = 1;
 	if (drv->data_tx_status)

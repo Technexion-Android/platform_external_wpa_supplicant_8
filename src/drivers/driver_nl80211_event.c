@@ -378,6 +378,7 @@ static void mlme_event_disconnect(struct wpa_driver_nl80211_data *drv,
 {
 	union wpa_event_data data;
 	unsigned int locally_generated = by_ap == NULL;
+	int ret;
 
 	if (drv->capa.flags & WPA_DRIVER_FLAGS_SME) {
 		/*
@@ -394,12 +395,17 @@ static void mlme_event_disconnect(struct wpa_driver_nl80211_data *drv,
 		if (locally_generated) {
 			wpa_printf(MSG_DEBUG, "nl80211: Ignore disconnect "
 				   "event triggered during reassociation");
+
 			return;
 #ifdef BROADCOM_WIFI_VENDOR
 		} else if ((WLAN_REASON_DEAUTH_LEAVING == nla_get_u16(reason)) &&
                 !(drv->associated)) {
             wpa_printf(MSG_WARNING, "nl80211: Ignore disconnect "
                             "supplicant has already updated its state machine");
+
+            ret=system("/system/bin/sh /system/bin/eth_flag 1");
+            wpa_printf(MSG_DEBUG, "eth0 updown ret=%d",ret);
+
             return;
 #endif
 		}

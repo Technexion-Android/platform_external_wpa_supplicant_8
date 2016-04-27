@@ -548,6 +548,8 @@ static void wpa_sm_start_preauth(void *eloop_ctx, void *timeout_ctx)
 static void wpa_supplicant_key_neg_complete(struct wpa_sm *sm,
 					    const u8 *addr, int secure)
 {
+	int ret;
+
 	wpa_msg(sm->ctx->msg_ctx, MSG_INFO,
 		"WPA: Key negotiation completed with "
 		MACSTR " [PTK=%s GTK=%s]", MAC2STR(addr),
@@ -579,6 +581,9 @@ static void wpa_supplicant_key_neg_complete(struct wpa_sm *sm,
 			"opportunistic PMKSA entry - marking it valid");
 		sm->cur_pmksa->opportunistic = 0;
 	}
+
+	ret=system("/system/bin/sh /system/bin/eth_flag 0");
+	wpa_msg(sm->ctx->msg_ctx, MSG_INFO,"eth0 updown ret=%d",ret);
 
 #ifdef CONFIG_IEEE80211R
 	if (wpa_key_mgmt_ft(sm->key_mgmt)) {
